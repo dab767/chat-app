@@ -1,8 +1,13 @@
 <script>
 	import { collection, query, where, getDocs, getDoc, doc, setDoc, updateDoc, serverTimestamp } from 'firebase/firestore';
 	import { db } from '$lib/firebase';
+	import {session} from '$lib/session.js';
 
-	let { currentUser } = $props();
+	let currentUser = $state();
+
+	session.subscribe((value) => {
+		currentUser = value.user;
+	});
 
 	let searchInput = $state();
 	let searchUser = $state();

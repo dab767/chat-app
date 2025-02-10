@@ -1,17 +1,35 @@
 <script>
-  import { enhance } from "$app/forms";
+  import { goto } from "$app/navigation";
+  import { session } from "$lib/session.js";
+  import { signOut } from "firebase/auth";
+  import { auth } from "$lib/firebase.js";
 
-  let { displayName, photoURL} = $props();
+  let currentUser = $state();
 
+  session.subscribe((value) => {
+    currentUser = value.user;
+  });
+
+  async function logout() {
+    signOut(auth)
+            .then(() => {
+              session.set({
+                loggedIn: false,
+                user: false,
+              })
+              goto('/login')
+            })
+            .catch((error) => {
+              return error;
+            });
+  }
 </script>
 <div class="navbar">
   <span class="logo">NetSys Messenger</span>
   <div class="user">
-    <img src={photoURL} alt="" />
-    <span>{displayName}</span>
-    <form action="/logout" method="post" use:enhance>
-      <button>Logout</button>
-    </form>
+    <img src="{currentUser.photoURL}" alt="" />
+    <span>{currentUser.displayName}</span>
+    <button onclick={logout()}>Logout</button>
   </div>
 </div>
 

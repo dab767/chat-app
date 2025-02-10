@@ -1,19 +1,41 @@
 <script>
-  import { enhance } from '$app/forms';
+  import { session } from "$lib/session.js";
+  import { auth } from "$lib/firebase.js";
+  import { signInWithEmailAndPassword } from "firebase/auth";
+  import { goto } from "$app/navigation";
 
-  /** @type {{ data: import('./$types').PageData }} */
-  let { data, form } = $props();
+  let email = $state("");
+  let password = $state("");
+
+  async function loginWithMail() {
+    await signInWithEmailAndPassword(auth, email, password).then((userCredential) => {
+      const { user } = userCredential;
+
+      session.set({
+        loggedIn: true,
+        user: {
+          displayName: user?.displayName,
+          email: user?.email,
+          photoURL: user?.photoURL,
+          uid: user?.uid,
+        },
+      });
+      goto("/");
+    }).catch((error) => {
+      return error;
+    });
+  }
 </script>
 
 <div class="home">
   <div class="registerForm">
-    <form method="post" autocomplete="off" use:enhance>
+    <form onsubmit={loginWithMail}>
       <h2>Login</h2>
-      <input
+      <input bind:value={email}
         type="text"
         name="email"
         placeholder="Your E-Mail-Address" />
-      <input
+      <input bind:value={password}
         type="password"
         name="password"
         placeholder="Your Password" />

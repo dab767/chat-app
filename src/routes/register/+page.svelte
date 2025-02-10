@@ -1,36 +1,89 @@
 <script>
-	import { enhance } from '$app/forms';
-	import { auth } from '$lib/firebase';
-	import { createUserWithEmailAndPassword } from 'firebase/auth';
+	import { auth,db,storage } from '$lib/firebase';
+	import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
+	import { doc , setDoc} from "firebase/firestore";
+	import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
+	import { error } from '@sveltejs/kit';
+	import { session } from "$lib/session.js";
+	import { goto } from "$app/navigation";
 
 	/** @type {{ data: import('./$types').PageData }} */
 	let { data } = $props();
+
+	let username = $state('username');
+	let email = $state('email');
+	let password = $state('password');
+	let file = $state('file');
+
+	async function handleRegister() {
+		try {
+		const result = await createUserWithEmailAndPassword(auth, email, password);
+		const { user } = result;
+
+		session.update((cur) => {
+			return {
+				...cur,
+				user,
+				loggedIn: true,
+				loading: false
+			};
+		});
+
+		//create unique image name
+		const date = new Date().getTime();
+		const storageRef = ref(storage, `${username + '_' + date}`);
+
+		//upload image
+		await uploadBytesResumable(storageRef, file).then(() => {
+			getDownloadURL(storageRef).then(async (downloadURL) => {
+				try{
+					//update profile
+					await updateProfile(result.user, {
+						displayName: username,
+						photoURL: downloadURL,
+					});
+					//create user on firestore
+					await setDoc(doc(db, "users", result.user.uid), {
+						displayName: username,
+						email,
+						photoURL: downloadURL,
+					})
+
+					await setDoc(doc(db, "userChats", result.user.uid), {});
+
+				} catch (err) {
+					error(404, {message: err});
+				}
+			})
+			goto('/');
+		});
+	} catch (err) {
+		error(404, {message: err});
+		}
+	}
 </script>
 
 <div class="home">
 	<div class="registerForm">
-		<form autocomplete="off" method="post" enctype="multipart/form-data" use:enhance>
+		<form enctype="multipart/form-data" onSubmit={handleRegister}>
 			<h2>Register</h2>
-			<input
+			<input bind:value={username}
 				type="text"
-        name="username"
 				placeholder="Username" />
-			<input
+			<input bind:value={email}
 				type="text"
-        name="email"
 				placeholder="Email" />
-			<input
+			<input bind:value={password}
 				type="password"
-        name="password"
 				placeholder="Password" />
-			<label for="pictfile">
+			<label for="file">
 				<i class="bi bi-file-earmark-plus-fill"></i>
 				<span>Add an avatar</span>
 			</label>
-			<input
+			<input bind:value={file}
 				type="file"
-        name="pictfile"
-				id="pictfile" />
+        		name="file"
+				id="file" />
 			<button type="submit">Register</button>
 		</form>
 		<p>You have an account? <a href="/login">Login</a></p>
