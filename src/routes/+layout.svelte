@@ -38,4 +38,12 @@
   });
 </script>
 
-{@render children()}
+<svelte:head>
+    <title>NetSys - Messenger</title>
+</svelte:head>
+
+{#if loading}
+    <div>Loading...</div>
+{:else}
+    <div>{@render children()}</div>
+{/if}
