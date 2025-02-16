@@ -1,35 +1,29 @@
 <script>
   import { goto } from "$app/navigation";
-  import { session } from "$lib/session.js";
   import { signOut } from "firebase/auth";
   import { auth } from "$lib/firebase.js";
-
-  let currentUser = $state();
-
-  session.subscribe((value) => {
-    currentUser = value.user;
-  });
+  import { sessionState } from "$lib/state/session.svelte";
 
   async function logout() {
     signOut(auth)
-            .then(() => {
-              session.set({
-                loggedIn: false,
-                user: false,
-              })
-              goto('/login')
-            })
-            .catch((error) => {
-              return error;
-            });
+      .then(() => {
+        sessionState.loggedIn = false;
+        sessionState.user = false;
+        
+        goto("/login");
+      })
+      .catch((error) => {
+        return error;
+      });
   }
 </script>
+
 <div class="navbar">
   <span class="logo">NetSys Messenger</span>
   <div class="user">
-    <img src="{currentUser.photoURL}" alt="" />
-    <span>{currentUser.displayName}</span>
-    <button onclick={logout()}>Logout</button>
+    <img src={sessionState.user.photoURL} alt="" />
+    <span>{sessionState.user.displayName}</span>
+    <button onclick={logout}>Logout</button>
   </div>
 </div>
 

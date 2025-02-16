@@ -1,5 +1,5 @@
 <script>
-  import { session } from "$lib/session.js";
+  import { sessionState } from "$lib/state/session.svelte";
   import { auth } from "$lib/firebase.js";
   import { signInWithEmailAndPassword } from "firebase/auth";
   import { goto } from "$app/navigation";
@@ -11,15 +11,10 @@
     await signInWithEmailAndPassword(auth, email, password).then((userCredential) => {
       const { user } = userCredential;
 
-      session.set({
-        loggedIn: true,
-        user: {
-          displayName: user?.displayName,
-          email: user?.email,
-          photoURL: user?.photoURL,
-          uid: user?.uid,
-        },
-      });
+      //-------New State
+      sessionState.loggedIn = true;
+      sessionState.user = user;
+
       goto("/");
     }).catch((error) => {
       return error;

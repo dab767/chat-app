@@ -4,9 +4,14 @@
   import { onMount } from "svelte";
   import { session } from "$lib/session";
   import { goto } from "$app/navigation";
+  import { sessionState } from "$lib/state/session.svelte"
 
   /** @type {{ data: import('./$types').LayoutData, children: import('svelte').Snippet }} */
   let { data, children } = $props();
+  
+  $inspect(sessionState);
+
+  
   let loading = $state(true);
   let loggedIn = $state(false);
 
@@ -16,15 +21,20 @@
   });
 
   onMount(async () => {
-      const user = await data.getAuthUser();
-      const loggedIn = !!user && user?.emailVerified;
+      const currentUser = await data.getAuthUser();
+      const loggedIn = currentUser;
+
+      sessionState.loggedIn = loggedIn;
+      sessionState.user = currentUser;
+
+      loading = false;
 
       session.update((cur) => {
           loading = false;
 
           return {
               ...cur,
-              user,
+              currentUser,
               loggedIn,
               loading: false,
           };

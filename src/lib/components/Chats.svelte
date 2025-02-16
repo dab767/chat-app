@@ -1,27 +1,32 @@
+<script>
+  import { db } from "$lib/firebase";
+  import { doc, onSnapshot } from "firebase/firestore";
+  import { sessionState } from "$lib/state/session.svelte";
+
+  let chats = $state();
+
+  $effect(() => {
+    const unsub = onSnapshot(doc(db, "userChats", sessionState.user.uid), (doc) => {
+      chats = Object.entries(doc.data());
+    });
+
+    return () => {
+      unsub();
+    }
+  });
+</script>
+
 <div class="chats">
-  <div class="userChat">
-    <img src="/images/avatar/robot.png" alt="">
-    <div class="userChatInfo">
-      <span>Dello</span>
-      <p>Hello</p>
-    </div>
-  </div>
 
-  <div class="userChat">
-    <img src="/images/avatar/robot.png" alt="">
+  {#each chats as chat}
+  <div class="userChat" key={chat[0]}>
+    <img src={chat[1].userInfo.photoURL} alt="" />
     <div class="userChatInfo">
-      <span>Dello</span>
-      <p>Hello</p>
+      <span>{chat[1].userInfo.displayName}</span>
+      <p>{chat[1].userInfo?.lastMessage}</p>
     </div>
   </div>
-
-  <div class="userChat">
-    <img src="/images/avatar/robot.png" alt="">
-    <div class="userChatInfo">
-      <span>Dello</span>
-      <p>Hello</p>
-    </div>
-  </div>
+  {/each}
 </div>
 
 <style>
@@ -38,7 +43,7 @@
     background-color: #2f2d52;
   }
 
-  .userChat img{
+  .userChat img {
     background-color: white;
     width: 50px;
     height: 50px;
