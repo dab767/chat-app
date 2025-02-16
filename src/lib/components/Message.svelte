@@ -24,7 +24,7 @@
   </div>
   <div class="messageContent">
     <p>{message.messageText}</p>
-    <img src="" alt="" />
+    <img src={message.img} alt="" />
   </div>
 </div>
 
@@ -64,7 +64,8 @@
   }
 
   .messageContent img {
-    width: 50%;
+    width: 30%;
+    border-radius: 10px;
   }
 
   .message.owner {

@@ -20,6 +20,23 @@
   };
 
   const handleSend = async () => {
+    if (messageImage) {
+      const storageRef = ref(storage, uuid());
+
+      await uploadBytesResumable(storageRef, messageImage).then(() => {
+        getDownloadURL(storageRef).then(async (downloadURL) => {
+          await updateDoc(doc(db, "chats", chatState.chatID), {
+            messages: arrayUnion({
+              id: uuid(),
+              messageText,
+              senderId: sessionState.user.uid,
+              date: Timestamp.now(),
+              img: downloadURL,
+            }),
+          });
+        });
+      });
+    } else {
       await updateDoc(doc(db, "chats", chatState.chatID), {
         messages: arrayUnion({
           id: uuid(),
@@ -28,7 +45,7 @@
           date: Timestamp.now(),
         }),
       });
-    
+    }
 
     await updateDoc(doc(db, "userChats", sessionState.user.uid), {
       [chatState.chatID + ".lastMessage"]: {
@@ -46,7 +63,7 @@
 
     messageText = "";
     messageImage = null;
-  }
+  };
 </script>
 
 <div class="input">
@@ -54,6 +71,7 @@
   <div class="send">
     <i class="bi bi-paperclip"></i>
     <input
+      bind:this={messageImage}
       type="file"
       id="file"
       style="display: none"
