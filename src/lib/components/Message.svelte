@@ -1,22 +1,30 @@
-<div  class="message">
-  <div class="messageInfo">
-    <img src="/images/avatar/robot.png" alt="">
-    <span>just now</span>
-  </div>
-  <div class="messageContent">
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Odio, qui!</p>
-    <img src="/images/avatar/robot.png" alt="">
-  </div>
-</div>
+<script>
+  import { sessionState } from "$lib/state/auth.svelte";
+  import { chatState } from "$lib/state/chat.svelte";
 
-<div  class="message owner">
+  /** @type {import('./$types').PageProps} */
+  let { message, key } = $props();
+  let ref = $state();
+
+  $effect(() => {
+    ref.scrollIntoView({ behavior: "smooth" });
+  });
+</script>
+
+<div
+  bind:this={ref}
+  class="message {message.senderId === sessionState.user.uid ? 'owner' : ''}">
   <div class="messageInfo">
-    <img src="/images/avatar/avatar-3.png" alt="">
+    <img
+      src={message.senderId === sessionState.user.uid
+        ? sessionState.user.photoURL
+        : chatState.user.photoURL}
+      alt="" />
     <span>just now</span>
   </div>
   <div class="messageContent">
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Odio, qui!</p>
-    <img src="/images/avatar/robot.png" alt="">
+    <p>{message.messageText}</p>
+    <img src="" alt="" />
   </div>
 </div>
 
@@ -34,13 +42,13 @@
     font-weight: 300;
   }
 
-  .messageInfo img{
+  .messageInfo img {
     width: 40px;
     height: 40px;
     border-radius: 50%;
     object-fit: cover;
   }
-  
+
   .messageContent {
     max-width: 80%;
     display: flex;
@@ -48,7 +56,7 @@
     gap: 10px;
   }
 
-  .messageContent p{
+  .messageContent p {
     background-color: white;
     padding: 10px 20px;
     border-radius: 0px 10px 10px 10px;
@@ -67,7 +75,7 @@
     align-items: flex-end;
   }
 
-  .message.owner .messageContent p{
+  .message.owner .messageContent p {
     background-color: #8da4f1;
     color: white;
     border-radius: 10px 0px 10px 10px;

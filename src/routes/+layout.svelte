@@ -4,6 +4,7 @@
   import { onMount } from "svelte";
   import { goto } from "$app/navigation";
   import { sessionState } from "$lib/state/auth.svelte"
+  import { chatState } from '$lib/state/chat.svelte';
 
   /** @type {{ data: import('./$types').LayoutData, children: import('svelte').Snippet }} */
   let { data, children } = $props();

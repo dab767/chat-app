@@ -1,11 +1,12 @@
 <script>
   import Input from './Input.svelte';
   import Messages from './Messages.svelte';
+  import { chatState } from '$lib/state/chat.svelte';
 </script>
 
 <div class="chat">
   <div class="chatInfo">
-    <span>Name</span>
+    <span>{chatState.user?.displayName}</span>
     <div class="chatIcons">
       <i class="bi bi-camera-video-fill"></i>
       <i class="bi bi-person-fill-add"></i>

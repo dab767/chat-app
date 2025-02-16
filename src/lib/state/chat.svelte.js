@@ -1,4 +1,4 @@
 export const chatState = $state({
-  chatID: null,
+  chatID: 'null',
   user: null
 });

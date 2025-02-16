@@ -29,37 +29,37 @@
   };
 
   const handleClick = async () => {
-    const compinedId =
+    const combinedId =
       sessionState.user.uid > searchUser.uid
         ? sessionState.user.uid + searchUser.uid
         : searchUser.uid + sessionState.user.uid;
 
-    const docRef = doc(db, "chats", compinedId);
+    const docRef = doc(db, "chats", combinedId);
 
     try {
       const docSnap = await getDoc(docRef);
 
       if (!docSnap.exists()) {
         //create a chat in chats collection
-        await setDoc(doc(db, "chats", compinedId), { messages: [] });
+        await setDoc(doc(db, "chats", combinedId), { messages: [] });
 
         //create user chats
         await updateDoc(doc(db, "userChats", sessionState.user.uid), {
-          [compinedId + ".userInfo"]: {
+          [combinedId + ".userInfo"]: {
             uid: searchUser.uid,
             displayName: searchUser.displayName,
             photoURL: searchUser.photoURL,
           },
-          [compinedId + ".date"]: serverTimestamp(),
+          [combinedId + ".date"]: serverTimestamp(),
         });
 
         await updateDoc(doc(db, "userChats", searchUser.uid), {
-          [compinedId + ".userInfo"]: {
+          [combinedId + ".userInfo"]: {
             uid: sessionState.user.uid,
             displayName: sessionState.user.displayName,
             photoURL: sessionState.user.photoURL,
           },
-          [compinedId + ".date"]: serverTimestamp(),
+          [combinedId + ".date"]: serverTimestamp(),
         });
       }
     } catch (err) {
