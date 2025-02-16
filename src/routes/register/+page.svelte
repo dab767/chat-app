@@ -4,7 +4,7 @@
   import { doc, setDoc } from "firebase/firestore";
   import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
   import { error } from "@sveltejs/kit";
-  import { sessionState } from "$lib/state/session.svelte";
+  import { sessionState } from "$lib/state/auth.svelte";
   import { goto } from "$app/navigation";
 
   /** @type {{ data: import('./$types').PageData }} */

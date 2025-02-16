@@ -8,7 +8,7 @@
 
 <div class="home">
 	<div class="container">
-		<Sidebar displayName={data.displayName} photoURL={data.photoURL}></Sidebar>
+		<Sidebar></Sidebar>
 		<Chat></Chat>
 	</div>
 </div>

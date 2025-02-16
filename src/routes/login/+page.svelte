@@ -1,5 +1,5 @@
 <script>
-  import { sessionState } from "$lib/state/session.svelte";
+  import { sessionState } from "$lib/state/auth.svelte";
   import { auth } from "$lib/firebase.js";
   import { signInWithEmailAndPassword } from "firebase/auth";
   import { goto } from "$app/navigation";

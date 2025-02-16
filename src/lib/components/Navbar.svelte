@@ -2,7 +2,7 @@
   import { goto } from "$app/navigation";
   import { signOut } from "firebase/auth";
   import { auth } from "$lib/firebase.js";
-  import { sessionState } from "$lib/state/session.svelte";
+  import { sessionState } from "$lib/state/auth.svelte";
 
   async function logout() {
     signOut(auth)

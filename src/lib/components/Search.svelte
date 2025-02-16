@@ -11,7 +11,7 @@
     serverTimestamp,
   } from "firebase/firestore";
   import { db } from "$lib/firebase";
-  import { sessionState } from "$lib/state/session.svelte";
+  import { sessionState } from "$lib/state/auth.svelte";
 
   let searchInput = $state();
   let searchUser = $state();
