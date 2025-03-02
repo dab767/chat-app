@@ -4,9 +4,9 @@ import { signOut } from "firebase/auth";
 
 /** @type {import('./$types').Actions} */
 export const actions = {
-  default: async ({ cookies }) => {
+  default: async () => {
     const user = await signOut(auth);
 
-    redirect(302, "/login");
+    return redirect(302, "/login");
   },
 };

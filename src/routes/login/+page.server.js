@@ -20,7 +20,7 @@ export const actions = {
 		const email = data.get('email');
 		const password = data.get('password');
 
-		const user = signInWithEmailAndPassword(auth, email, password)
+		const user = await signInWithEmailAndPassword(auth, email, password)
 		
 		return redirect(302, '/');
 	},
