@@ -1,6 +1,6 @@
 <script>
   import Message from "./Message.svelte";
-  import { db } from "$lib/firebase";
+  import { db } from "$lib/auth/firebase";
   import { doc, onSnapshot } from "firebase/firestore";
   import { sessionState } from "$lib/state/auth.svelte";
   import { chatState } from "$lib/state/chat.svelte";

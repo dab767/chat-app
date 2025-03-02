@@ -10,7 +10,7 @@
     updateDoc,
     serverTimestamp,
   } from "firebase/firestore";
-  import { db } from "$lib/firebase";
+  import { db } from "$lib/auth/firebase";
   import { sessionState } from "$lib/state/auth.svelte";
 
   let searchInput = $state();

@@ -1,17 +1,18 @@
 <script>
-  import { db } from "$lib/firebase";
+  import { db } from "$lib/auth/firebase";
   import { doc, onSnapshot } from "firebase/firestore";
-  import { sessionState } from "$lib/state/auth.svelte";
   import { chatState } from "$lib/state/chat.svelte";
+  import { getContext } from "svelte";
 
   let chats = $state();
+  let currentUser = getContext('user')
 
   $effect(() => {
     const unsub = onSnapshot(
-      doc(db, "userChats", sessionState.user.uid),
+      doc(db, "userChats", currentUser().uid),
       (doc) => {
         if (doc.exists()) {
-          chats = Object.entries(doc.data());
+          chats = Object.entries(doc.data()).sort((a,b) => b[1].date - a[1].date);
         }
       }
     );
@@ -23,9 +24,9 @@
 
   const handleSelect = (user) => {
     const combinedId =
-      sessionState.user.uid > user.uid
-        ? sessionState.user.uid + user.uid
-        : user.uid + sessionState.user.uid;
+    currentUser().uid > user.uid
+        ? currentUser().uid + user.uid
+        : user.uid + currentUser().uid;
 
     chatState.chatID = combinedId;
     chatState.user = user;

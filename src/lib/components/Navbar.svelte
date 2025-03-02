@@ -1,29 +1,16 @@
 <script>
-  import { goto } from "$app/navigation";
-  import { signOut } from "firebase/auth";
-  import { auth } from "$lib/firebase.js";
-  import { sessionState } from "$lib/state/auth.svelte";
-
-  async function logout() {
-    signOut(auth)
-      .then(() => {
-        sessionState.loggedIn = false;
-        sessionState.user = false;
-        
-        goto("/login");
-      })
-      .catch((error) => {
-        return error;
-      });
-  }
+  import { getContext } from "svelte";
+  let user = getContext('user');
 </script>
 
 <div class="navbar">
   <span class="logo">NetSys Messenger</span>
   <div class="user">
-    <img src={sessionState.user.photoURL} alt="" />
-    <span>{sessionState.user.displayName}</span>
-    <button onclick={logout}>Logout</button>
+    <img src={user().photoURL} alt="" />
+    <span>{user().displayName}</span>
+    <form action="/logout" method="post">
+      <button>Logout</button>
+    </form>
   </div>
 </div>
 

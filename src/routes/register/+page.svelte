@@ -1,5 +1,5 @@
 <script>
-  import { auth, db, storage } from "$lib/firebase";
+  import { auth, db, storage } from "$lib/auth/firebase";
   import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
   import { doc, setDoc } from "firebase/firestore";
   import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
@@ -15,7 +15,7 @@
   let password = $state();
   let file = $state();
   let avatar = $state();
-	let image = $state();
+  let image = $state();
 
   const onFileSelected = (e) => {
     image = e.target.files[0];
@@ -99,7 +99,7 @@
           style="display:none"
           type="file"
           accept=".jpg, .jpeg, .png"
-					onchange={(e)=>onFileSelected(e)}
+          onchange={(e) => onFileSelected(e)}
           bind:this={file} />
       </div>
       <button onclick={(e) => handleRegister(e)}>Register</button>
@@ -108,7 +108,7 @@
   </div>
 </div>
 
-<style>
+<style lang="scss">
   .registerForm {
     border: 1px solid white;
     border-radius: 10px;
@@ -119,28 +119,29 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-  }
+    box-shadow: 1px 0px 26px 12px rgba(0, 0, 0, 0.51);
 
-  .registerForm .form {
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
-    width: 100%;
+    .form {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+      width: 100%;
+    }
   }
 
   .registerForm .form .image-input {
     display: flex;
     flex-direction: row;
-		gap: 3rem;
+    gap: 3rem;
   }
 
   .registerForm .form input {
-    border: none;
-    outline: none;
-    height: 2rem;
+    height: 3rem;
     padding: 0.5rem;
-    border-bottom: 1px solid #7b96ec;
+    border: 1px solid #7b96ec;
+    border-radius: 10px;
     font-size: 1rem;
+    font-weight: bold;
   }
 
   .registerForm .form .image-input input[type="file"] {
@@ -156,10 +157,11 @@
     background-color: #7b96ec;
     color: wheat;
     border: none;
-    border-radius: 5px;
+    border-radius: 10px;
     outline: none;
     padding: 0.5rem;
     cursor: pointer;
+    height: 3rem;
   }
 
   .registerForm .form i {

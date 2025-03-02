@@ -1,9 +1,10 @@
 <script>
-	/** @type {import('./$types').PageProps} */
-	let { data } = $props();
-
 	import Chat from '$lib/components/Chat.svelte';
 	import Sidebar from '$lib/components/Sidebar.svelte';
+	
+  /** @type {import('./$types').PageProps} */
+	let { data } = $props();
+  
 </script>
 
 <div class="home">

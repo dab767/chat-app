@@ -1,36 +1,17 @@
 <script>
-  import { sessionState } from "$lib/state/auth.svelte";
-  import { auth } from "$lib/firebase.js";
-  import { signInWithEmailAndPassword } from "firebase/auth";
-  import { goto } from "$app/navigation";
-
-  let email = $state("");
-  let password = $state("");
-
-  async function loginWithMail() {
-    await signInWithEmailAndPassword(auth, email, password).then((userCredential) => {
-      const { user } = userCredential;
-
-      //-------New State
-      sessionState.loggedIn = true;
-      sessionState.user = user;
-
-      goto("/");
-    }).catch((error) => {
-      return error;
-    });
-  }
+  /** @type {{ data: import('./$types').PageData }} */
+  let { data } = $props();
 </script>
 
 <div class="home">
   <div class="registerForm">
-    <form onsubmit={loginWithMail}>
+    <form method="post">
       <h2>Login</h2>
-      <input bind:value={email}
+      <input
         type="text"
         name="email"
         placeholder="Your E-Mail-Address" />
-      <input bind:value={password}
+      <input
         type="password"
         name="password"
         placeholder="Your Password" />
@@ -40,7 +21,7 @@
   </div>
 </div>
 
-<style>
+<style lang="scss">
   .registerForm {
     border: 1px solid white;
     border-radius: 10px;
@@ -51,36 +32,38 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-  }
+    box-shadow: 1px 0px 26px 12px rgba(0, 0, 0, 0.51);
 
-  .registerForm form {
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
-    width: 100%;
-  }
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+      width: 100%;
 
-  .registerForm form input {
-    border: none;
-    outline: none;
-    height: 2rem;
-    padding: 0.5rem;
-    border-bottom: 1px solid #7b96ec;
-    font-size: 1rem;
-  }
+      input {
+        height: 3rem;
+        padding: 0.5rem;
+        border: 1px solid #7b96ec;
+        border-radius: 10px;
+        font-size: 1rem;
+        font-weight: bold;
+      }
 
-  .registerForm form button {
-    background-color: #7b96ec;
-    color: wheat;
-    border: none;
-    border-radius: 5px;
-    outline: none;
-    padding: 0.5rem;
-    cursor: pointer;
-  }
+      button {
+        background-color: #7b96ec;
+        color: wheat;
+        border: none;
+        border-radius: 10px;
+        outline: none;
+        padding: 0.5rem;
+        cursor: pointer;
+        height: 3rem;
+      }
+    }
 
-  .registerForm p {
-    margin-top: 20px;
-    font-size: 1rem;
+    p {
+      margin-top: 20px;
+      font-size: 1rem;
+    }
   }
 </style>
